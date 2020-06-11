@@ -11,6 +11,12 @@
 // Class decorator 가 받는 인자
 function Logger(logString: string) {
   // 여기에 코딩하세요.
+  console.log("LOGGER FACTORY");
+  return function (constructor: any) {
+    console.log("LOGGING");
+    const a = new constructor();
+    console.log(a + logString);
+  };
 }
 
 //문제2
@@ -20,13 +26,22 @@ function Logger(logString: string) {
 // template은 h1 태그를 사용해주세요
 function WithTemplate(template: string, hookId: string) {
   // 여기에 코딩하세요.
+  console.log("TEMPLATE FACTORY");
   return function (constructor: any) {
-   // 여기에 코딩하세요.
+    console.log("rendering template");
+    const hookEl = document.getElementById(hookId);
+    if (hookEl === null) {
+      return;
+    }
+    hookEl.innerHTML = template;
+
+    const p = new constructor();
+    const h1 = hookEl.querySelector("h1");
+    if (h1) h1.textContent = p.name;
   };
 }
-
-//Decorator 넣을자리1
-//Decorator 넣을자리2
+@Logger("logString")
+@WithTemplate("<h1></h1>", "app")
 class Person {
   name = "tj";
 
